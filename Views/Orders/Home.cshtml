@@ -1,0 +1,117 @@
+﻿@model Dictionary<int, List<GFTTest.Models.Dish>>
+
+@{
+    ViewBag.Title = "Home";
+    Layout = "_Layout";
+}
+
+@section JavaScript {
+    <script src="~/Content/Scripts/Pages/orders.js"></script>
+}
+
+    <div class="container">
+        <div class="row">
+            <div class="col col-sm-12">
+                <h4>Orders</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-sm-3">
+                <label class="label">Input</label>
+                <div class="form-group">
+                    <input id="txt-input" name="InputBox" type="text" class="form-control" />
+                </div>
+            </div>
+            <div class="col col-sm-3">
+                <label class="label">Output</label>
+                <div class="form-group">
+                    <input id="txt-output" name="OutputBox" type="text" class="form-control" />
+                </div>
+            </div>
+            <div class="col col-sm-12">
+                <button id="btn-send-order" type="button" class="btn btn-primary">Send Order</button>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col col-sm-12">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Input</th>
+                            <th>Output</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-orders-history">
+                        @if (Model.Count > 0)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @string.Concat(item.Value.FirstOrDefault().Period, ", ", string.Join(",", item.Value.Select(s => (int)s.DishType)))
+                                    </td>
+                                    <td>
+                                        @string.Concat(item.Value.FirstOrDefault().Period, ", ", string.Join(",", item.Value
+                                                                                                                .GroupBy(g => g.DishType)
+                                                                                                                .Select(s => string.Format("{0}{1}",
+                                                                                                                            s.FirstOrDefault().Name
+                                                                                                                            , s.Count() > 1 ? string.Concat("(", s.Count(), ")") : string.Empty))))
+                                    </td>
+                                </tr>
+
+                            }
+                        }
+                        else
+                        {
+                            <tr class="no-orders">
+                                <td colspan="3">No orders have been performed.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col col-sm-12">
+                <div id="alert" class="alert alert-primary" role="alert" style="display:none;"></div>
+            </div>
+        </div>
+
+        <div id="div-available-orders" class="row">
+            <div class="col-sm-12">
+                <table class="table table-bordered" style="display:none;">
+                    <thead>
+                        <tr>
+                            <th>Dish Type</th>
+                            <th>morning</th>
+                            <th>night</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1 (entrée)</td>
+                            <td>eggs</td>
+                            <td>steak</td>
+                        </tr>
+                        <tr>
+                            <td>2 (side)</td>
+                            <td>Toast</td>
+                            <td>potato</td>
+                        </tr>
+                        <tr>
+                            <td>3 (drink)</td>
+                            <td>coffee</td>
+                            <td>wine</td>
+                        </tr>
+                        <tr>
+                            <td>4 (dessert)</td>
+                            <td>Not Applicable</td>
+                            <td>cake</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
